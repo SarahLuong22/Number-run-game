@@ -1,5 +1,6 @@
 import random
-def divisor(number):
+#divisor to find safe choice for "/"
+def divisor(number: int):
   divisors = []
   
   for i in range (2, int(number/2)+1):
@@ -9,15 +10,26 @@ def divisor(number):
     divisors = [number]
   return divisors
 
-yourNum = random.randint(1, 9)
+def strToOperator(number1: int, number2: int, str_operator: str):
+  if str_operator == "+":
+    return (number1 + number2) 
+  elif str_operator == "-":
+    return (number1 - number2)
+  elif str_operator == "*":
+    return (number1 * number2) 
+  elif str_operator == "/":
+    return (number1 / number2) 
+
+
+yourNum = random.randint(1, 9) #assigned initial number for player
 print ("Your number is %s" %yourNum)
-operator = ["+", "-", "*", "/"]
+
 
 for i in range (1, 4):
   if yourNum == 1:
     operator = ["+", "*"]
   elif yourNum != 1:
-    operator = ["+", "-", "*", "/"]
+    operator = ["+", "-", "+", "-", "*", "/"] #higher chance to have - or +, which is easier
   print ("ROUND %i" %i)
   choice1_operator = random.choice(operator)
   if choice1_operator == "+":
@@ -29,14 +41,41 @@ for i in range (1, 4):
   elif choice1_operator == "/":
     choice1_num = random.choice(divisor(yourNum))
   print("Choice 1: %s %s" % (choice1_operator, choice1_num))
-  print(divisor(yourNum))
+  
+  choice2_operator = random.choice(operator)
+  if choice2_operator == "+":
+    choice2_num = random.randint(yourNum, 99) - yourNum
+  elif choice2_operator == "-":
+    choice2_num = yourNum - random.randint(1, yourNum-1)
+  elif choice2_operator == "*":
+    choice2_num = int(random.randint(yourNum + 1, 100)/yourNum)
+  elif choice2_operator == "/":
+    choice2_num = random.choice(divisor(yourNum))
+  print("Choice 2: %s %s" % (choice2_operator, choice2_num))
 
-  # choice2_operator = random.choice(operator)
-  # choice2_num = random.randint(1, 9)
-  # print("Choice 2: %s %s" % (choice2_operator, choice2_num))
+  choice3_operator = random.choice(operator)
+  if choice3_operator == "+":
+    choice3_num = random.randint(yourNum, 99) - yourNum
+  elif choice3_operator == "-":
+    choice3_num = yourNum - random.randint(1, yourNum-1)
+  elif choice3_operator == "*":
+    choice3_num = int(random.randint(yourNum + 1, 100)/yourNum)
+  elif choice3_operator == "/":
+    choice3_num = random.choice(divisor(yourNum))
+  print("Choice 3: %s %s" % (choice3_operator, choice3_num))
+  
+  userChoice = input("What is your choice?     ")
+  
+  if userChoice == 1:
+    yourNum = strToOperator(yourNum, choice1_num, choice1_operator)
+  elif userChoice == 2:
+    yourNum = strToOperator(yourNum, choice2_num, choice2_operator)
+  elif userChoice == 3:
+    yourNum = strToOperator(yourNum, choice3_num, choice3_operator)
 
-  # choice3_operator = random.choice(operator)
-  # choice3_num = random.randint(1, 9)
-  # print("Choice 3: %s %s" % (choice3_operator, choice3_num))
+  if type(yourNum) != int or yourNum < 0 or yourNum > 100:
+    print ("You failed")
+  else:
+    print ("Good!")
+    
 
-# input
