@@ -121,6 +121,10 @@ def running_cycle (start_cycle, end_cycle, operator_list, safety, yourNum):
 yourNum = random.randint(1, 9) #assigned initial number for player
 print ("Your number is %s" %yourNum)
 
-yourNum = running_cycle(1, 3, ["+", "-", "+", "-", "*", "/"], 3, yourNum)
-if type(yourNum) == int or (yourNum >= 0 and yourNum <= 100):
-  yourNum = running_cycle(4, 10, ["+", "-", "+", "-", "*", "/"], 2, yourNum)
+yourNum = running_cycle(1, 3, ["+", "-", "*", "/"], 3, yourNum)
+
+if type(yourNum) == int and yourNum >= 0 and yourNum <= 100:
+  yourNum = running_cycle(4, 6, ["+", "-", "*", "/"], 2, yourNum)
+  
+if type(yourNum) == int and yourNum >= 0 and yourNum <= 100:
+  yourNum = running_cycle(7, 9, ["+", "-", "*", "/"], 1, yourNum)
