@@ -37,7 +37,7 @@ def choice_safety_order (num_of_safe_choice: int):
   return order
 
 
-def safe_choice (operator_list):
+def safe_choice (operator_list, yourNum):
 
   operator = operator_list
     
@@ -55,7 +55,7 @@ def safe_choice (operator_list):
         operator.remove(i)
       
   choice_operator = random.choice(operator)
-  operator.remove(choice_operator)
+  # operator.remove(choice_operator)
   
   if choice_operator == "+":
     choice_num = random.randint(yourNum+1, 100) - yourNum
@@ -71,76 +71,56 @@ def safe_choice (operator_list):
 def risk_choice (operator_list):
   operator = operator_list
   choice_operator = random.choice(operator)
-  choice_num = random.randint(1, 99)
+  if choice_operator == "+":
+    choice_num = random.randint(1, 70)
+  elif choice_operator == "-":
+    choice_num = random.randint(1, 70)
+  elif choice_operator == "*":
+    choice_num = random.randint(2, 20)
+  elif choice_operator == "/":
+    choice_num = random.randint(2, 10)
+  
   return choice_operator, choice_num
+
+def running_cycle (start_cycle, end_cycle, operator_list, safety, yourNum):
+  for i in range (start_cycle, end_cycle + 1):
+    order = choice_safety_order (safety)
+    choice_operator = [1]*3
+    choice_num = [1]*3
+  
+    print("Your streak is %s" % i)
+  
+    for z in range (3):
+      if order[z] == True:
+        (choice_operator[z], choice_num[z]) = safe_choice(operator_list, yourNum)
+      if order[z] == False:
+        choice_operator[z], choice_num[z] = risk_choice(operator_list)
+      if z >=1:
+        if (choice_operator[z], choice_num[z]) == (choice_operator[z-1], choice_num[z-1]):
+          choice_operator[z], choice_num[z] = risk_choice(operator_list)
+      if z >=2:
+        if (choice_operator[z], choice_num[z]) == (choice_operator[z-2], choice_num[z-2]):
+          choice_operator[z], choice_num[z] = risk_choice(operator_list)
+      
+      print("Choice %s: %s %s" % (z+1, choice_operator[z], choice_num[z]))
+    
+    userChoice = int(input("What is your choice?     "))-1
+  
+    yourNum = strToOperator(yourNum, choice_num[userChoice], choice_operator[userChoice])
+    print (yourNum)
+    if type(yourNum) != int or yourNum < 0 or yourNum > 100:
+      print ("You failed. Your streak is %s" %i)
+      break
+    else:
+      print ("Good!")
+      print ()
+      print ()
+  return yourNum
+
 
 yourNum = random.randint(1, 9) #assigned initial number for player
 print ("Your number is %s" %yourNum)
 
-
-for i in range (1, 4):
-  order = choice_safety_order (3)
-  operator_list = ["+", "-", "+", "-", "*", "/"]
-  choice_operator = [1]*3
-  choice_num = [1]*3
-
-  print("Your streak is %s" % i)
-
-  for z in range (3):
-    if order[z] == True:
-      (choice_operator[z], choice_num[z]) = safe_choice(operator_list)
-    if order[z] == False:
-      choice_operator[z], choice_num[z] = risk_choice(operator_list)
-    if z >=1:
-      if (choice_operator[z], choice_num[z]) == (choice_operator[z-1], choice_num[z-1]):
-        choice_operator[z], choice_num[z] = risk_choice(operator_list)
-    if z >=2:
-      if (choice_operator[z], choice_num[z]) == (choice_operator[z-2], choice_num[z-2]):
-        choice_operator[z], choice_num[z] = risk_choice(operator_list)
-    
-    print("Choice %s: %s %s" % (z+1, choice_operator[z], choice_num[z]))
-  
-  userChoice = int(input("What is your choice?     "))-1
-
-  yourNum = strToOperator(yourNum, choice_num[userChoice], choice_operator[userChoice])
-  
-  if type(yourNum) != int or yourNum < 0 or yourNum > 100:
-    print ("You failed. Your streak is %s" %i)
-  else:
-    print ("Good!")
-    print ()
-    print ()
-
-for i in range (4, 10):
-  order = choice_safety_order (2)
-  operator_list = ["+", "-", "+", "-", "*", "/"]
-  choice_operator = [1]*3
-  choice_num = [1]*3
-
-  print("Your streak is %s" % i)
-
-  for z in range (3):
-    if order[z] == True:
-      (choice_operator[z], choice_num[z]) = safe_choice(operator_list)
-    if order[z] == False:
-      choice_operator[z], choice_num[z] = risk_choice(operator_list)
-    if z >=1:
-      if (choice_operator[z], choice_num[z]) == (choice_operator[z-1], choice_num[z-1]):
-        choice_operator[z], choice_num[z] = risk_choice(operator_list)
-    if z >=2:
-      if (choice_operator[z], choice_num[z]) == (choice_operator[z-2], choice_num[z-2]):
-        choice_operator[z], choice_num[z] = risk_choice(operator_list)
-
-    print("Choice %s: %s %s" % (z+1, choice_operator[z], choice_num[z]))
-  
-  userChoice = int(input("What is your choice?     "))-1
-
-  yourNum = strToOperator(yourNum, choice_num[userChoice], choice_operator[userChoice])
-  
-  if type(yourNum) != int or yourNum < 0 or yourNum > 100:
-    print ("You failed. Your streak is %s" %i)
-    break
-  else:
-    print ("Good!")
-    print ()
-    print ()
+yourNum = running_cycle(1, 3, ["+", "-", "+", "-", "*", "/"], 3, yourNum)
+if type(yourNum) == int or (yourNum >= 0 and yourNum <= 100):
+  yourNum = running_cycle(4, 10, ["+", "-", "+", "-", "*", "/"], 2, yourNum)
