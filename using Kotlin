@@ -1,0 +1,134 @@
+import kotlin.random.Random
+
+
+fun divisor(number: int):
+  divisors = []
+  for i in range (2, int(number/2)+1):
+    if number % i == 0:
+      divisors.append(i)
+  if divisors == []:
+    divisors = [number]
+  return divisors
+
+
+fun strToOperator(number1: int, number2: int, str_operator: str):
+  if str_operator == "+":
+    return (number1 + number2) 
+  elif str_operator == "-":
+    return (number1 - number2)
+  elif str_operator == "*":
+    return (number1 * number2) 
+  elif str_operator == "/":
+    if number1 % number2 == 0:
+      return int(number1 / number2) 
+    else:
+      return number1/number2
+
+fun choice_safety_order (num_of_safe_choice: int):
+  order = [True]*3
+  if num_of_safe_choice == 3:
+    order = [True]*3
+  elif num_of_safe_choice == 2:
+    order = [True, True, False]
+    random.shuffle(order)
+  elif num_of_safe_choice == 1:
+    order = [True, False, False]
+    random.shuffle(order)
+  return order
+
+
+fun safe_choice (operator_list, yourNum):
+
+  operator = operator_list
+    
+  if yourNum == 1:
+    for i in operator_list:
+      if i == "-" or i == "/":
+        operator.remove(i)
+  if yourNum == 100:
+    for i in operator_list:
+      if i == "+":
+        operator.remove(i)
+  if yourNum >= 50:
+    for i in operator_list:
+      if i == "*":
+        operator.remove(i)
+      
+  choice_operator = random.choice(operator)
+  # operator.remove(choice_operator)
+  
+  if choice_operator == "+":
+    choice_num = Random.nextInt(yourNum+1, 100) - yourNum
+  elif choice_operator == "-":
+    choice_num = yourNum - random.randint(1, yourNum-1)
+  elif choice_operator == "*":
+    choice_num = int(random.randint(yourNum + 1, 100)/yourNum)
+  elif choice_operator == "/":
+    choice_num = random.choice(divisor(yourNum))
+  
+  return choice_operator, choice_num
+
+fun risk_choice (operator_list):
+  operator = operator_list
+  choice_operator = random.choice(operator)
+  if choice_operator == "+":
+    choice_num = random.randint(1, 70)
+  elif choice_operator == "-":
+    choice_num = random.randint(1, 70)
+  elif choice_operator == "*":
+    choice_num = random.randint(2, 20)
+  elif choice_operator == "/":
+    choice_num = random.randint(2, 10)
+  
+  return choice_operator, choice_num
+
+fun running_cycle (start_cycle, end_cycle, operator_list, safety, yourNum):
+  for i in range (start_cycle, end_cycle + 1):
+    order = choice_safety_order (safety)
+    choice_operator = [1]*3
+    choice_num = [1]*3
+  
+    print("Your streak is %s" % i)
+  
+    for z in range (3):
+      if order[z] == True:
+        (choice_operator[z], choice_num[z]) = safe_choice(operator_list, yourNum)
+      if order[z] == False:
+        choice_operator[z], choice_num[z] = risk_choice(operator_list)
+      if z >=1:
+        if (choice_operator[z], choice_num[z]) == (choice_operator[z-1], choice_num[z-1]):
+          choice_operator[z], choice_num[z] = risk_choice(operator_list)
+      if z >=2:
+        if (choice_operator[z], choice_num[z]) == (choice_operator[z-2], choice_num[z-2]):
+          choice_operator[z], choice_num[z] = risk_choice(operator_list)
+      
+      print("Choice %s: %s %s" % (z+1, choice_operator[z], choice_num[z]))
+    
+    userChoice = int(input("What is your choice?     "))-1
+  
+    yourNum = strToOperator(yourNum, choice_num[userChoice], choice_operator[userChoice])
+    print (yourNum)
+    if type(yourNum) != int or yourNum < 0 or yourNum > 100:
+      print ("You failed. Your streak is %s" %i)
+      break
+    else:
+      print ("Good!")
+      print ()
+      print ()
+  return yourNum
+
+
+fun main() {
+  yourNum = random.randint(1, 9) #assigned initial number for player
+  print ("Your number is %s" %yourNum)
+  
+  yourNum = running_cycle(1, 3, ["+", "-", "*", "/"], 3, yourNum)
+  
+  if type(yourNum) == int and yourNum >= 0 and yourNum <= 100:
+    yourNum = running_cycle(4, 6, ["+", "-", "*", "/"], 2, yourNum)
+    
+  if type(yourNum) == int and yourNum >= 0 and yourNum <= 100:
+    yourNum = running_cycle(7, 9, ["+", "-", "*", "/"], 1, yourNum)
+
+
+}
