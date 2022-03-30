@@ -1,14 +1,15 @@
 import kotlin.random.Random
 
 
-fun divisor(number: int):
-  divisors = []
+fun divisor(number: Int) {
+  var divisors: list
   for i in range (2, int(number/2)+1):
     if number % i == 0:
       divisors.append(i)
   if divisors == []:
     divisors = [number]
   return divisors
+}
 
 
 fun strToOperator(number1: int, number2: int, str_operator: str):
