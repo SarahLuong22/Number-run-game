@@ -1,29 +1,38 @@
 import kotlin.random.Random
 
 
-fun divisor(number: Int) {
-  var divisors: list
-  for i in range (2, int(number/2)+1):
-    if number % i == 0:
-      divisors.append(i)
-  if divisors == []:
-    divisors = [number]
+fun divisor(number: Int): List<Int> {
+  var divisors : List<Int> = listOf()
+  for (i in 2.rangeTo(number/2+1)) {
+    if (number % i == 0) {
+      divisors += i
+    }
+  }
+  if (divisors.isEmpty()) {
+    divisors += number
+  }
   return divisors
 }
 
 
-fun strToOperator(number1: int, number2: int, str_operator: str):
-  if str_operator == "+":
-    return (number1 + number2) 
-  elif str_operator == "-":
-    return (number1 - number2)
-  elif str_operator == "*":
-    return (number1 * number2) 
-  elif str_operator == "/":
-    if number1 % number2 == 0:
-      return int(number1 / number2) 
-    else:
-      return number1/number2
+fun strToOperator(number1: Int, number2: Int, str_operator: String): Int {
+  var result: Int = 0
+  if (str_operator == "+") {
+    result = (number1 + number2) 
+  } else if (str_operator == "-") {
+    result = (number1 - number2)
+  } else if (str_operator == "*") {
+    result =  (number1 * number2) 
+  } else if (str_operator == "/") {
+    if (number1 % number2 == 0) {
+      result =  number1 / number2
+    } else {
+      result =  -1
+    }
+    
+  }
+  return result
+}
 
 fun choice_safety_order (num_of_safe_choice: int):
   order = [True]*3
