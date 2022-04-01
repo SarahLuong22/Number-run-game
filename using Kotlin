@@ -1,6 +1,6 @@
 import kotlin.random.Random
 
-
+//to find the divisor of a number
 fun divisor(number: Int): List<Int> {
   var divisors : List<Int> = listOf()
   for (i in 2.rangeTo(number/2+1)) {
@@ -14,7 +14,7 @@ fun divisor(number: Int): List<Int> {
   return divisors
 }
 
-
+//to  effectuate/perform an Operator(which is a string)
 fun strToOperator(number1: Int, number2: Int, str_operator: String): Int {
   var result: Int = 0
   if (str_operator == "+") {
@@ -34,17 +34,20 @@ fun strToOperator(number1: Int, number2: Int, str_operator: String): Int {
   return result
 }
 
-fun choice_safety_order (num_of_safe_choice: int):
-  order = [True]*3
-  if num_of_safe_choice == 3:
-    order = [True]*3
-  elif num_of_safe_choice == 2:
-    order = [True, True, False]
-    random.shuffle(order)
-  elif num_of_safe_choice == 1:
-    order = [True, False, False]
-    random.shuffle(order)
+//at least how many choices is safe = num_of_safe_choice
+//order of safe and risk choice
+fun choiceSafetyOrder (num_of_safe_choice: Int): List<Boolean> {
+  var order: List<Boolean> = listOf(true, true, true)
+  if (num_of_safe_choice == 3) {
+    order = listOf(true, true, true)
+  } else if (num_of_safe_choice == 2) { 
+    order = listOf(true, true, false).shuffled()
+  } else if (num_of_safe_choice == 1) {
+    order = listOf(true, false, false).shuffled()
+  }
   return order
+}
+
 
 
 fun safe_choice (operator_list, yourNum):
