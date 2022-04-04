@@ -14,16 +14,20 @@ fun divisor(number: Int): List<Int> {
   return divisors
 }
 
-//to  effectuate/perform an Operator(which is a string)
-fun strToOperator(number1: Int, number2: Int, str_operator: String): Int {
+//to  effectuate/perform an Operator
+//1 = +
+//2 = -
+//3 = *
+//4 = /
+fun strToOperator(number1: Int, number2: Int, strOperator: Int): Int {
   var result: Int = 0
-  if (str_operator == "+") {
+  if (strOperator == 1) {
     result = (number1 + number2) 
-  } else if (str_operator == "-") {
+  } else if (strOperator == 2) {
     result = (number1 - number2)
-  } else if (str_operator == "*") {
+  } else if (strOperator == 3) {
     result =  (number1 * number2) 
-  } else if (str_operator == "/") {
+  } else if (strOperator == 4) {
     if (number1 % number2 == 0) {
       result =  number1 / number2
     } else {
@@ -50,13 +54,13 @@ fun choiceSafetyOrder (num_of_safe_choice: Int): List<Boolean> {
 
 
 // generating safe choice
-fun safeChoice(operatorList: MutableList<String>, yourNum: Int): Pair<String, Int> {
+fun safeChoice(operatorList: MutableList<Int>, yourNum: Int): Pair<Int, Int> {
 
-  var operator: MutableList<String> = operatorList
+  var operator: MutableList<Int> = operatorList
     
   if (yourNum == 1) {
     for (i in operatorList) {
-      if (i.equals("-") or i.equals("/")) {
+      if (i.equals(2) or i.equals(4)) {
         operator.remove(i)
       }
     }
@@ -64,7 +68,7 @@ fun safeChoice(operatorList: MutableList<String>, yourNum: Int): Pair<String, In
   
   if (yourNum == 100) {
     for (i in operatorList) {
-      if (i == "+") {
+      if (i == 1) {
         operator.remove(i)
       } 
     }
@@ -72,7 +76,7 @@ fun safeChoice(operatorList: MutableList<String>, yourNum: Int): Pair<String, In
   
   if (yourNum >= 50) {
     for (i in operatorList) {
-      if (i == "*") {
+      if (i == 3) {
         operator.remove(i)
       } 
     } 
@@ -82,13 +86,13 @@ fun safeChoice(operatorList: MutableList<String>, yourNum: Int): Pair<String, In
   // operator.remove(choice_operator)
   var choiceNum: Int = 2
   
-  if (choiceOperator == "+") {
-    choiceNum = Random.nextInt(yourNum+1, 100) - yourNum
-  } else if (choiceOperator == "-") {
-    choiceNum = yourNum - Random.nextInt(1, yourNum-1)
-  } else if (choiceOperator == "*") {
-    choiceNum = Random.nextInt(yourNum*2 - 1, 100)/yourNum
-  } else if (choiceOperator == "/") {
+  if (choiceOperator == 1) {
+    choiceNum = Random.nextInt(yourNum + 1, 100) - yourNum
+  } else if (choiceOperator == 2) {
+    choiceNum = yourNum - Random.nextInt(1, yourNum - 1)
+  } else if (choiceOperator == 3) {
+    choiceNum = Random.nextInt(yourNum * 2 - 1, 100)/yourNum
+  } else if (choiceOperator == 4) {
     choiceNum = divisor(yourNum).random()
   }
   
@@ -96,73 +100,82 @@ fun safeChoice(operatorList: MutableList<String>, yourNum: Int): Pair<String, In
 }
 
 // generating risk choice
-fun riskChoice (operatorList: MutableList<String>): Pair<String, Int> {
-  var operator: MutableList<String> = operatorList
+fun riskChoice (operatorList: MutableList<Int>): Pair<Int, Int> {
+  var operator: MutableList<Int> = operatorList
   var choiceOperator = operator.random()
   // operator.remove(choice_operator)
   var choiceNum: Int = 2
        
-  if (choiceOperator == "+") {
+  if (choiceOperator == 1) {
     choiceNum = Random.nextInt(1, 70)
-  } else if (choiceOperator == "-") {
+  } else if (choiceOperator == 2) {
     choiceNum = Random.nextInt(1, 70)
-  } else if (choiceOperator == "*") {
+  } else if (choiceOperator == 3) {
     choiceNum = Random.nextInt(2, 20)
-  } else if (choiceOperator == "/") {
+  } else if (choiceOperator == 4) {
     choiceNum = Random.nextInt(2, 10)
   }
   
     return Pair(choiceOperator, choiceNum)
 }
 
+fun runningCycle (startCycle: Int, endCycle: Int, operatorList: MutableList<Int>, safety: Int, yourNum: Int): Int {
+  for (i in startCycle.rangeTo(endCycle + 1)) {
+    var order = choiceSafetyOrder (safety)
+    var choiceOperator: MutableList<Int> = mutableListOf(1,1,1)
+    var choiceNum: MutableList<Int> = mutableListOf(1,1,1)
 
-fun running_cycle (start_cycle, end_cycle, operator_list, safety, yourNum):
-  for i in range (start_cycle, end_cycle + 1):
-    order = choice_safety_order (safety)
-    choice_operator = [1]*3
-    choice_num = [1]*3
   
-    print("Your streak is %s" % i)
+    println("Your streak is " + (i-1))
   
-    for z in range (3):
-      if order[z] == True:
-        (choice_operator[z], choice_num[z]) = safe_choice(operator_list, yourNum)
-      if order[z] == False:
-        choice_operator[z], choice_num[z] = risk_choice(operator_list)
-      if z >=1:
-        if (choice_operator[z], choice_num[z]) == (choice_operator[z-1], choice_num[z-1]):
-          choice_operator[z], choice_num[z] = risk_choice(operator_list)
-      if z >=2:
-        if (choice_operator[z], choice_num[z]) == (choice_operator[z-2], choice_num[z-2]):
-          choice_operator[z], choice_num[z] = risk_choice(operator_list)
+    for (z in 0..2) {
+      if (order[z] == true) {
+        var (first, second) = safeChoice(operatorList, yourNum)
+        choiceOperator[z] = first
+        choiceNum[z] = second
+      }
+      if (order[z] == false) {
+        var (first, second) = safeChoice(operatorList, yourNum)
+        choiceOperator[z] = first
+        choiceNum[z] = second
+      }
+      if (z >=1) {
+        if (choiceOperator[z], choiceNum[z]) == (choiceOperator[z-1], choiceNum[z-1]) {
+          choiceOperator[z], choiceNum[z] = riskChoice(operatorList)
+        }
+      }
+      if (z >=2) {
+        if ((choiceOperator[z], choiceNum[z]) == (choiceOperator[z-2], choiceNum[z-2])) {
+          choiceOperator[z], choiceNum[z] = riskChoice(operatorList)
+        }
+      }
       
-      print("Choice %s: %s %s" % (z+1, choice_operator[z], choice_num[z]))
+      println("Choice " + (z+1) + ": " + choice_operator[z] + choice_num[z])
+    }
+  }
     
-    userChoice = int(input("What is your choice?     "))-1
+  println("What is your choice?     ")
+  userChoice = readLine() -1
   
-    yourNum = strToOperator(yourNum, choice_num[userChoice], choice_operator[userChoice])
-    print (yourNum)
-    if type(yourNum) != int or yourNum < 0 or yourNum > 100:
-      print ("You failed. Your streak is %s" %i)
+  yourNum = strToOperator(yourNum, choiceNum[userChoice], choiceOperator[userChoice])
+  println(yourNum)
+    if (yourNum < 0 or yourNum > 100){
+      println ("You failed. Your streak is " + i)
       break
     else:
-      print ("Good!")
-      print ()
-      print ()
+      println ("Good!")
+      println ()
+      println ()
+    }
   return yourNum
+}
+
 
 
 fun main() {
-  yourNum = random.randint(1, 9) #assigned initial number for player
-  print ("Your number is %s" %yourNum)
   
-  yourNum = running_cycle(1, 3, ["+", "-", "*", "/"], 3, yourNum)
-  
-  if type(yourNum) == int and yourNum >= 0 and yourNum <= 100:
-    yourNum = running_cycle(4, 6, ["+", "-", "*", "/"], 2, yourNum)
-    
-  if type(yourNum) == int and yourNum >= 0 and yourNum <= 100:
-    yourNum = running_cycle(7, 9, ["+", "-", "*", "/"], 1, yourNum)
-
-
+   println(riskChoice(mutableListOf("+", "-", "*", "/")))
 }
+
+
+ 
