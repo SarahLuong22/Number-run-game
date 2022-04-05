@@ -119,13 +119,28 @@ fun riskChoice (operatorList: MutableList<Int>): Pair<Int, Int> {
     return Pair(choiceOperator, choiceNum)
 }
 
-fun runningCycle (startCycle: Int, endCycle: Int, operatorList: MutableList<Int>, safety: Int, yourNum: Int): Int {
-  for (i in startCycle.rangeTo(endCycle + 1)) {
-    var order = choiceSafetyOrder (safety)
-    var choiceOperator: MutableList<Int> = mutableListOf(1,1,1)
-    var choiceNum: MutableList<Int> = mutableListOf(1,1,1)
+fun stringOperator (intOperator: Int): String {
+    var stringOpe: String = ""
+    if (intOperator == 1) {
+        stringOpe = "+"
+    } else if (intOperator == 2) {
+        stringOpe = "-"
+    } else if (intOperator == 3) {
+        stringOpe = "*"
+    } else if (intOperator == 4) {
+        stringOpe = "/"
+    } 
+    return stringOpe
+}
 
-  
+fun runningCycle (startCycle: Int, endCycle: Int, operatorList: MutableList<Int>, safety: Int, yourNumber: Int): Int {
+  var yourNum = yourNumber
+  var order = choiceSafetyOrder (safety)
+  var choiceOperator: MutableList<Int> = mutableListOf(1,1,1)
+  var choiceNum: MutableList<Int> = mutableListOf(1,1,1)
+
+  for (i in startCycle.rangeTo(endCycle + 1)) {
+    
     println("Your streak is " + (i-1))
   
     for (z in 0..2) {
@@ -133,49 +148,62 @@ fun runningCycle (startCycle: Int, endCycle: Int, operatorList: MutableList<Int>
         var (first, second) = safeChoice(operatorList, yourNum)
         choiceOperator[z] = first
         choiceNum[z] = second
-      }
-      if (order[z] == false) {
-        var (first, second) = safeChoice(operatorList, yourNum)
-        choiceOperator[z] = first
-        choiceNum[z] = second
-      }
-      if (z >=1) {
-        if (choiceOperator[z], choiceNum[z]) == (choiceOperator[z-1], choiceNum[z-1]) {
-          choiceOperator[z], choiceNum[z] = riskChoice(operatorList)
+        if (z >=1) {
+          if (choiceOperator[z] == choiceOperator[z-1] && choiceNum[z] ==  choiceNum[z-1]) {
+            var (first, second) = safeChoice(operatorList, yourNum)
+        	choiceOperator[z] = first
+        	choiceNum[z] = second
+          }
+        }
+        if (z >=2) {
+          while (((choiceOperator[z] == choiceOperator[z-2]) && (choiceNum[z] ==  choiceNum[z-2])) || 
+                  ((choiceOperator[z] == choiceOperator[z-1]) && (choiceNum[z] ==  choiceNum[z-1]))) {
+            var (first, second) = safeChoice(operatorList, yourNum)
+        	choiceOperator[z] = first
+        	choiceNum[z] = second
+          }
         }
       }
-      if (z >=2) {
-        if ((choiceOperator[z], choiceNum[z]) == (choiceOperator[z-2], choiceNum[z-2])) {
-          choiceOperator[z], choiceNum[z] = riskChoice(operatorList)
+      if (order[z] == false) {
+        var (first, second) = riskChoice(operatorList)
+        choiceOperator[z] = first
+        choiceNum[z] = second
+      
+        if (z >=1) {
+          while (choiceOperator[z] == choiceOperator[z-1] && choiceNum[z] == choiceNum[z-1]) {
+            var (first, second) = riskChoice(operatorList)
+        	choiceOperator[z] = first
+        	choiceNum[z] = second
+          }
+        }
+        if (z >=2) {
+          while (((choiceOperator[z] == choiceOperator[z-2]) && (choiceNum[z] ==  choiceNum[z-2])) || 
+                  ((choiceOperator[z] == choiceOperator[z-1]) && (choiceNum[z] ==  choiceNum[z-1]))) {
+            var (first, second) = riskChoice(operatorList)
+        	choiceOperator[z] = first
+        	choiceNum[z] = second
+          }
         }
       }
       
-      println("Choice " + (z+1) + ": " + choice_operator[z] + choice_num[z])
+      println("Choice " + (z+1) + ": " + stringOperator(choiceOperator[z]) + choiceNum[z])
     }
-  }
-    
+  
+      
   println("What is your choice?     ")
-  userChoice = readLine() -1
+  var userChoice: Int = readLine()!!.toInt() - 1
   
   yourNum = strToOperator(yourNum, choiceNum[userChoice], choiceOperator[userChoice])
   println(yourNum)
-    if (yourNum < 0 or yourNum > 100){
+    if (yourNum < 0 || yourNum > 100){
       println ("You failed. Your streak is " + i)
       break
-    else:
+    } else {
       println ("Good!")
       println ()
       println ()
     }
+  }
   return yourNum
 }
 
-
-
-fun main() {
-  
-   println(riskChoice(mutableListOf("+", "-", "*", "/")))
-}
-
-
- 
