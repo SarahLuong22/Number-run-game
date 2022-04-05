@@ -207,3 +207,23 @@ fun runningCycle (startCycle: Int, endCycle: Int, operatorList: MutableList<Int>
   return yourNum
 }
 
+
+
+fun main() {
+  
+    var yourNum = Random.nextInt(1, 10) //assigned initial number for player
+	println ("Your number is " + yourNum)
+
+    yourNum = runningCycle(1, 3, mutableListOf(1, 2, 3, 4), 3, yourNum)
+
+    if (yourNum >= 0 && yourNum <= 100) {
+      yourNum = runningCycle(4, 6, mutableListOf(1, 2, 3, 4), 2, yourNum)
+    }
+
+    if (yourNum >= 0 && yourNum <= 100) {
+      yourNum = runningCycle(7, 9, mutableListOf(1, 2, 3, 4), 1, yourNum)
+    }
+}
+
+
+ 
